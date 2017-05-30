@@ -1,4 +1,4 @@
-package cs544.hpa2;
+package cs544.hpa1;
 
 import java.util.List;
 
@@ -35,22 +35,28 @@ public class AppCar {
     public static void main(String[] args) throws Exception {
         setUp();
 
-        Session session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
+            Owner owner = new Owner("Adonai", "Fairfield, IA");
+            Owner owner2 = new Owner("Kalieb", "Sacramento, CA");
+
             // Create new instance of Car and set values in it
-            Car car1 = new Car("BMW", "SDA231", 30221.00);
+            Car car1 = new Car("BMW", "SDA231", 30221.00, owner);
             // save the car
             session.persist(car1);
             // Create new instance of Car and set values in it
-            Car car2 = new Car("Mercedes", "HOO100", 4088.00);
+            Car car2 = new Car("Mercedes", "HOO100", 4088.00, owner2);
+
+
             // save the car
             session.persist(car2);
 
             session.getTransaction().commit();
+            session.close();
+        }
 
-
-        //Session session  = sessionFactory.openSession();
+        try (Session session  = sessionFactory.openSession()) {
             session.beginTransaction();
 
             // retieve all cars
@@ -58,10 +64,11 @@ public class AppCar {
             List<Car> carList = session.createQuery("from Car").list();
             for (Car car : carList) {
                 System.out.println("brand= " + car.getBrand() + ", year= "
-                        + car.getYear() + ", price= " + car.getPrice());
+                        + car.getYear() + ", price= " + car.getPrice() + ", owner= "
+                        + car.getOwner().getName() + ", address= " + car.getOwner().getAddress());
             }
             session.getTransaction().commit();
-
+        }
 
         // Close the SessionFactory (best practice)
         tearDown();

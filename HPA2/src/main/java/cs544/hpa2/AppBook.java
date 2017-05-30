@@ -17,7 +17,7 @@ public class AppBook {
     private static EntityManagerFactory entityManagerFactory;
 
     protected static void setUp() throws Exception {
-        entityManagerFactory = Persistence.createEntityManagerFactory("cs544_HPA2");
+        entityManagerFactory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
 
     }
 
@@ -28,7 +28,7 @@ public class AppBook {
     public static void main(String[] args) throws Exception{
         setUp();
 
-        try (EntityManager em = entityManagerFactory.createEntityManager()) {
+        EntityManager em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
 
             Book book1 = new Book("Shiver", "B2920", "Cassandra Claire", 23.50, Date.from(Instant.now()));
@@ -40,11 +40,10 @@ public class AppBook {
             em.persist(book3);
 
             em.getTransaction().commit();
-        }
 
         retrieveAll();
 
-        try (EntityManager em = entityManagerFactory.createEntityManager()) {
+        //EntityManager em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
 
             Query query = em.createQuery("from Book where author = 'Mark Bowden'");
@@ -61,7 +60,7 @@ public class AppBook {
             em.remove(em.createQuery("from Book where author = 'Mark Bowden'").getResultList().get(0));
 
             em.getTransaction().commit();
-        }
+
 
         retrieveAll();
 
@@ -69,7 +68,7 @@ public class AppBook {
     }
 
     static void retrieveAll(){
-        try (EntityManager em = entityManagerFactory.createEntityManager()){
+        EntityManager em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
 
             List<Book> bookList = em.createQuery("from Book").getResultList();
@@ -80,6 +79,6 @@ public class AppBook {
                         "\tISBN: " +book.getISBN());
             }
             em.getTransaction().commit();
-        }
+
     }
 }
