@@ -17,8 +17,7 @@ public class AppBook {
     private static EntityManagerFactory entityManagerFactory;
 
     protected static void setUp() throws Exception {
-        entityManagerFactory = Persistence.createEntityManagerFactory("NewPersistenceUnit");
-
+        entityManagerFactory = Persistence.createEntityManagerFactory("cs544_hpa2");
     }
 
     protected static void tearDown() throws Exception{
